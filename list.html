@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>配送单列表</title>
+    <script type="text/javascript" src="http://api.dajihui.cn/O2O_MallMgt/res/base/js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="http://api.dajihui.cn/O2O_MallMgt/res/base/js/adminJs/common/common.js"></script>
+    <script src="http://api.dajihui.cn/O2O_MallMgt/res/js/adminJs/dl.js"></script>
+    <script src="http://api.dajihui.cn/O2O_MallMgt/res/js/adminJs/common/ajaxfileupload.js"></script>
+    <script type="text/javascript" src="http://api.dajihui.cn/DJPS_Mgt/assets/js/form.js"></script>
+    <script type="text/javascript" src="http://api.dajihui.cn/DJPS_Mgt/assets/js/base.js"></script>
+    <style>
+        /* css 重置 */
+        .panel {
+            margin: 0 !important;
+        }
+        .lcc_operate {
+            display: block !important;
+            float: none !important;
+            width: auto !important;
+            margin: 18px 20px 0 20px !important;
+        }
+        .lcc_but {
+            margin-right: 0 !important;
+        }
+    </style>
+    <script type="text/javascript">
+        commonCssAndJs("http://api.dajihui.cn/O2O_MallMgt");
+
+
+        var basePath = "http://api.dajihui.cn/DJPS_Mgt";
+        //导出售后的报表
+        function download(){
+            var startdate = $("#startDate").val();
+            var enddate= $("#endDate").val();
+            var arr=startdate.split("-");
+            var starttime=new Date(arr[0],arr[1],arr[2]);
+            var starttimes=starttime.getTime();
+
+            var arrs=enddate.split("-");
+            var lktime=new Date(arrs[0],arrs[1],arrs[2]);
+            var lktimes=lktime.getTime();
+            if(starttimes>=lktimes)
+            {
+                alert("起始日期不能大于结束时间");
+                return false;
+            }else{
+                $("#submitForm").submit();
+            }
+            var aftersaleNo=$("#aftersaleNo").val();
+            var orderNo=$("#orderNo").val();
+            var consignee=$("#consignee").val();
+            var startDate=$("#startDate").val();
+            var endDate=$("#endDate").val();
+            var aftersaleState=$("#aftersaleState").val();
+            var url="/DJPS_Mgt/bizmgt/customservice/orderreturned/downloadOrderReturneds.ihtml?aftersaleNo="+aftersaleNo+"&orderNo="+orderNo+"&consignee="+consignee+"&startDate="+startDate+"&endDate="+endDate+"&aftersaleState="+aftersaleState;
+            window.open(url);
+        }
+
+        $(function(){
+            var grid = $('#grid');
+            grid.datagrid({
+                rownumbers: true,
+                fitColumns: true,
+                pagination: true,
+                singleSelect: false,
+                pageList:[10,20,50,100],
+                toolbar:'#toolbar',
+                idField:'waybillId',
+                url:basePath+"/order/waybill/findByCondition.do",
+                onLoadSuccess:function(){},
+                columns: [[
+                    {field: 'supplierName', title: '商家', align: 'center', width: 100},
+                    {field: 'waybillId', title: '配送单号', align: 'center', width: 100},
+                    {field: 'orderId', title: '订单号', align: 'center', width: 100},
+                    {field: 'releaseTime', title: '发布时间', align: 'center', width: 100},
+                    {field: 'courierName', title: '配送员', align: 'center', width: 100},
+                    {field: 'robTime', title: '接单时间', align: 'center', width: 100},
+                    {field: 'fetchTime', title: '取货时间', align: 'center', width: 100},
+                    {field: 'deliveredTime', title: '妥投时间', align: 'center', width: 100},
+                    {field: 'releaseState', title: '配送状态', align: 'center', width: 100,formatter: function(value,row,index){
+                        return value==1?"待发布":value==2?"待接单":value==3?"待取货":value==4?"执行中":value==5?"已完成":value==6?"撤销":value==7?"待退货":"";
+                    }}
+                ]]
+            });
+        })
+
+    </script>
+</head>
+<body>
+<div class="list_container">
+    <div class="list_container_top">
+        <span class="lct_left"></span> <span class="lct_center"><em>配送单列表</em>
+			</span> <span class="lct_right"></span>
+    </div>
+    <div class="list_container_center">
+        <form id="searchForm"  method="post">
+            <input type="hidden" name="orderNoes" id="orderNos">
+            <div class="lcc_operate lmq">
+                <div id="clause" class="lpf clearfix">
+                    <p class="lp">
+                        <span class="l-s">配送单号:</span> <input type="text" name="waybillId" class="easyui-combobox" />
+                    </p>
+                    <p class="lp">
+                        <span class="l-s">订单号:</span> <input type="text" name="orderId" class="easyui-combobox" />
+                    </p>
+                    <p class="lp">
+                        <span class="l-s">发布时间:</span> <input type="text" name="startDate" class="easyui-datebox" data-options="editable:false"/> 到 <input type="text" name="endDate" class="query-text easyui-datebox" data-options="editable:false"/>
+                    </p>
+                    <p class="lp">
+                        <span class="l-s">配送状态:</span>
+                        <input name="releaseState" class="easyui-combobox" data-options="valueField: 'value',textField: 'label',
+					data: [{label: '待发布',value: '1'},{label: '待接单',value: '2'},{label: '待取货',value: '3'},{label: '执行中',value: '4'},
+					{label: '已完成',value: '5'},{label: '已撤销',value: '6'},{label: '待退货',value: '7'}]" />
+                    </p>
+                    <p class="lp">
+                        <span class="l-s">商家:</span>
+                        <input type="text" name="supplierId" class="easyui-combobox" data-options="valueField:'id',textField:'supplierName',url:'/DJPS_Mgt/supplier/findBySupplierState.do'">
+                    </p>
+                </div>
+                <div class="lpf clearfix fr">
+                    <a class="lcc_but l12" href="javascript:void(0);" onclick="" data-options="iconCls:'icon-xls',plain:false"> <span>导出列表</span> </a>
+                    <a class="lcc_but l12" href="javascript:void(0)" onclick="JavaScript:$('#queryForm').form('reset');" data-options="iconCls:'icon-reload',plain:false"> <span>重置</span> </a>
+                    <a class="lcc_but l12" href="javascript:void(0)" onclick="$query('#grid','#queryForm');" data-options="iconCls:'icon-search',plain:false"> <span>查询</span> </a>
+                </div>
+            </div>
+        </form>
+        <div class="dataList_one" id="{rows}">
+            <div class="dataList">
+                <table id="grid"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function(){
+        $('.datagrid-body').css("overflow-x","hidden");
+    });
+</script>
+</body>
+</html>

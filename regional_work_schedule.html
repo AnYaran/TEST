@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>供销大集各大区域工作进度表</title>
+    <style type="text/css">
+        html,body {
+            min-width: 1300px;
+        }
+        body {
+            margin: 0;
+            font-family: "Microsoft Yahei","sans-serif";
+            line-height: 1.5;
+            color: #000;
+            background-color: #f5f5f5;
+        }
+        a {
+            text-decoration: none;
+        }
+        img {
+            max-width: 100%;
+            border: 0;
+        }
+        .clearfix:before,
+        .clearfix:after {
+            display:table;
+            content:" "
+        }
+        .clearfix:after {
+            clear:both;
+        }
+        .pull-left {
+            float: left;
+        }
+        .pull-right {
+            float: right;
+        }
+        .mt15 {
+            margin-top: 15px;
+        }
+        .mt20 {
+            margin-top: 20px;
+        }
+        .header {
+            height: 80px;
+            background: url("img/head_bg.png") no-repeat right top #026cb8;
+        }
+        .container {
+            width: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .website-tit {
+            margin-top: 23px;
+            margin-left: 12px;
+            color: #fff;
+            font-size: 22px;
+        }
+        .logo {
+            margin-top: 20px;
+        }
+        .update-time {
+            margin-top: 50px;
+        }
+        .regional-icon {
+            display: block;
+            width: 81px;
+            height: 81px;
+            background: url("img/line_area_icn.png") no-repeat;
+            overflow: hidden;
+        }
+        .icon-huabei {
+            background-position: 0 0;
+        }
+        .icon-huadong {
+            background-position: -81px 0;
+        }
+        .icon-shandong {
+            background-position: -162px 0;
+        }
+        .icon-hainan {
+            background-position: -243px 0;
+        }
+        .icon-huanan {
+            background-position: -324px 0;
+        }
+        .icon-xibei {
+            background-position: -405px 0;
+        }
+        .icon-zhongnan {
+            background-position: -486px 0;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .tabnav .tab-item {
+            float: left;
+            margin-left: 104px;
+            text-align: center;
+            color: #000;
+        }
+        .tabnav .active {
+            color: #32a3e3;
+        }
+        .tabnav .active .icon-huabei {
+            background-position: 0 -81px;
+        }
+        .tabnav .active .icon-huadong {
+            background-position: -81px -81px;
+        }
+        .tabnav .active .icon-shandong {
+            background-position: -162px -81px;
+        }
+        .tabnav .active .icon-hainan {
+            background-position: -243px -81px;
+        }
+        .tabnav .active .icon-huanan {
+            background-position: -324px -81px;
+        }
+        .tabnav .active .icon-xibei {
+            background-position: -405px -81px;
+        }
+        .tabnav .active .icon-zhongnan {
+            background-position: -486px -81px;
+        }
+
+        .tabnav .tab-item .txt {
+            display: block;
+            margin-top: 5px;
+            font-size: 16px;
+        }
+        .tabnav .tab-item:first-child {
+            margin-left: 52px;
+        }
+        .footer {
+            text-align: center;
+        }
+        .footer-tit {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 4px 48px;
+            font-family: "simSun","sans-serif";
+            font-size: 12px;
+            color: #f9f9f9;
+            background-color: #cacaca;
+            border-radius: 23px;
+            border: 1px solid #ababab;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div class="header">
+    <div class="container clearfix">
+        <div class="pull-right">
+            <img class="update-time" src="upload/update_time.png">
+        </div>
+        <div class="pull-left">
+            <a href="#" class="pull-left"><img class="logo" src="img/daji_logo.png"></a>
+            <span class="website-tit pull-left">供销大集各大区域工作进度表</span>
+        </div>
+    </div>
+</div>
+<!-- // Header -->
+<!-- Tab -->
+<div class="container mt20">
+    <div id="myTab" class="tabnav clearfix">
+        <a href="#" class="tab-item" data-target="#areaHuabei">
+            <span class="regional-icon icon-huabei"></span>
+            <span class="txt">华北区域</span>
+        </a>
+        <a href="#" class="tab-item" data-target="#areaHuadong">
+            <span class="regional-icon icon-huadong"></span>
+            <span class="txt">华东区域</span>
+        </a>
+        <a href="#" class="tab-item" data-target="#areaShandong">
+            <span class="regional-icon icon-shandong"></span>
+            <span class="txt">山东地区</span>
+        </a>
+        <a href="#" class="tab-item active" data-target="#areaHainan">
+            <span class="regional-icon icon-hainan"></span>
+            <span class="txt">海南地区</span>
+        </a>
+        <a href="#" class="tab-item" data-target="#areaHuanan">
+            <span class="regional-icon icon-huanan"></span>
+            <span class="txt">华南区域</span>
+        </a>
+        <a href="#" class="tab-item" data-target="#areaXibei">
+            <span class="regional-icon icon-xibei"></span>
+            <span class="txt">西北区域</span>
+        </a>
+        <a href="#" class="tab-item" data-target="#areaZhongnan">
+            <span class="regional-icon icon-zhongnan"></span>
+            <span class="txt">中南区域</span>
+        </a>
+    </div>
+    <div class="tab-container mt15">
+        <div class="tab-pane" id="areaHuabei">
+            <img src="upload/schedule_huabei.jpg">
+        </div>
+        <div class="tab-pane" id="areaHuadong">
+            <img src="upload/schedule_huadong.jpg">
+        </div>
+        <div class="tab-pane" id="areaShandong">
+            <img src="upload/schedule_shandong.jpg">
+        </div>
+        <div class="tab-pane active" id="areaHainan">
+            <img src="upload/schedule_hainan.jpg">
+        </div>
+        <div class="tab-pane" id="areaHuanan">
+            <img src="upload/schedule_huanan.jpg">
+        </div>
+        <div class="tab-pane" id="areaXibei">
+            <img src="upload/schedule_xibei.jpg">
+        </div>
+        <div class="tab-pane" id="areaZhongnan">
+            <img src="upload/schedule_zhongnan.jpg">
+        </div>
+    </div>
+</div>
+<!-- // Tab -->
+<!-- Footer -->
+<div class="container footer">
+    <span class="footer-tit">供销大集综合办公平台</span>
+</div>
+<!-- // Footer -->
+<script src="js/jquery-1.12.1.min.js"></script>
+<script>
+    $(function(){
+        $('#myTab > .tab-item').hover(function(e){
+            e.preventDefault();
+            var $this = $(this);
+            var _tabTarget = $(this).data('target');
+            $this.addClass('active').siblings('.tab-item').removeClass('active');
+            $(_tabTarget).addClass('active').siblings('.tab-pane').removeClass('active');
+        });
+    });
+</script>
+</body>
+</html>

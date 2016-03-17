@@ -1,0 +1,468 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>商品列表-商城</title>
+</head>
+<link rel="stylesheet" type="text/css" href="http://api.dajihui.cn/O2O_MallMgt/res/base/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="http://api.dajihui.cn/O2O_MallMgt/res/css/adminStyle/common/global.css">
+<link rel="stylesheet" type="text/css" href="http://api.dajihui.cn/O2O_MallMgt/res/css/adminStyle/supplierList.css">
+<link rel="stylesheet" type="text/css" href="http://api.dajihui.cn/O2O_MallMgt/res/css/adminStyle/dataList.css">
+<script src="http://api.dajihui.cn/O2O_MallMgt/res/js/adminJs/common/jquery-1.7.2.min.js"></script>
+<script src="http://api.dajihui.cn/O2O_MallMgt/res/js/adminJs/common/common.js"></script>
+<script src="http://api.dajihui.cn/O2O_MallMgt/res/js/adminJs/jquery.form.js"></script>
+<script src="http://api.dajihui.cn/O2O_MallMgt/res/js/adminJs/dl.js"></script>
+<script src="http://api.dajihui.cn/O2O_MallMgt/res/js/adminJs/little.js"></script>
+<script src="http://api.dajihui.cn/O2O_MallMgt/res/js/adminJs/WebCalendar.js"></script>
+<script type="text/javascript" src="http://api.dajihui.cn/O2O_MallMgt/res/base/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="http://api.dajihui.cn/O2O_MallMgt/res/base/easyui/locale/easyui-lang-zh_CN.js"></script>
+<style type="text/css">
+    .panel {
+        margin: 0 !important;
+    }
+    .fl {
+        float: left;
+    }
+    .text_center {
+        text-align: center;
+    }
+    .export_src {
+        width: 45%;
+    }
+    .export_divide {
+        position: relative;
+        width: 10%;
+    }
+    .export_result {
+        width: 45%;
+    }
+    .export_divide .lcc_but {
+        margin-top: 220px;
+    }
+    .clearfix:before,
+    .clearfix:after {
+        display:table;
+        content:" "
+    }
+    .clearfix:after {
+        clear:both;
+    }
+    .float_none {
+        float: none !important;
+    }
+    .export_container {
+        margin: 20px;
+    }
+    .mt20 {
+        margin-top: 20px;
+    }
+</style>
+<script type="text/javascript">
+
+    $(function(){
+
+        //查询一级商品分类
+        $.ajax({
+            url:"http://api.dajihui.cn/O2O_MallMgt/commodity_com/getTopCommoCategoryList.ihtml",
+            dataType:"JSON",
+            success:function(data){
+                if(null!=data && data.length!=0){
+                    var innerHtml="<option value=''>一级分类</option>";
+                    var firstCatNo = "";
+                    for(var i=0;i<data.length;i++){
+                        innerHtml+="<option value="+data[i].catNo+">"+data[i].catName+"</option>"
+                    }
+                    $("#firstCommonCategory").html(innerHtml);
+                    //默认值
+                    if(firstCatNo != ''){
+                        $("#firstCommonCategory option[value='"+firstCatNo+"']").attr("selected","selected");
+                        $("#firstCommonCategory").change();
+                    }
+                    var thirdinnerHtml="<option value=''>三级分类</option>";
+                    $("#thirdCommonCategory").html(thirdinnerHtml);
+
+                }
+            }
+        });
+
+        //查询二级商品分类
+        $("#firstCommonCategory").change(function(){
+            var catNo = $("#firstCommonCategory option:selected").val();
+            $.ajax({
+                url:"http://api.dajihui.cn/O2O_MallMgt/commodity_com/getSubCommoCategoryList.ihtml",
+                data:{catNo:catNo},
+                dataType:"JSON",
+                success:function(data){
+                    if(null!=data && data.length!=0){
+                        var innerHtml="<option value=''>二级分类</option>"
+                        var secondCatNo = "";
+                        for(var i=0;i<data.length;i++){
+                            innerHtml+="<option value="+data[i].catNo+">"+data[i].catName+"</option>"
+                        }
+                        $("#secondCommonCategory").html(innerHtml);
+                        //默认值
+                        if(secondCatNo != ''){
+                            $("#secondCommonCategory option[value='"+secondCatNo+"']").attr("selected","selected");
+                            $("#secondCommonCategory").change();
+                        }else{
+                            var thirdinnerHtml="<option value=''>三级分类</option>";
+                            $("#thirdCommonCategory").html(thirdinnerHtml);
+                        }
+
+                    }else{
+                        var innerHtml="<option value=''>二级分类</option>"
+                        $("#secondCommonCategory").html(innerHtml);
+                        var thirdinnerHtml="<option value=''>三级分类</option>";
+                        $("#thirdCommonCategory").html(thirdinnerHtml);
+                    }
+                }
+            });
+        });
+
+        //查询三级商品分类
+        $("#secondCommonCategory").change(function(){
+            var catNo = $("#secondCommonCategory option:selected").val();
+            $.ajax({
+                url:"http://api.dajihui.cn/O2O_MallMgt/commodity_com/getSubCommoCategoryList.ihtml",
+                data:{catNo:catNo},
+                dataType:"JSON",
+                success:function(data){
+                    if(null!=data && data.length!=0){
+                        var catNo1 = "";
+                        var innerHtml="<option value=''>三级分类</option>"
+                        for(var i=0;i<data.length;i++){
+                            innerHtml+="<option value="+data[i].catNo+">"+data[i].catName+"</option>"
+                        }
+                        $("#thirdCommonCategory").html(innerHtml);
+                        //默认值
+                        if(catNo1 != ''){
+                            $("#thirdCommonCategory option[value='"+catNo1+"']").attr("selected","selected");
+                        }
+                    }
+                }
+            });
+        });
+
+        //查询一级商品运营分类
+        $.ajax({
+            url:"http://api.dajihui.cn/O2O_MallMgt/commodity_com/getTopOperCateList.ihtml",
+            dataType:"JSON",
+            success:function(data){
+                if(null!=data && data.length!=0){
+                    var firstOperCatNo = "";
+                    var innerHtml="<option value=''>一级分类</option>"
+                    for(var i=0;i<data.length;i++){
+                        innerHtml+="<option value="+data[i].oprtCatNo+">"+data[i].oprtCatName+"</option>"
+                    }
+                    $("#firstOperatingCategory").html(innerHtml);
+                    //默认值
+                    if(firstOperCatNo != ''){
+                        $("#firstOperatingCategory option[value='"+firstOperCatNo+"']").attr("selected","selected");
+                        $("#firstOperatingCategory").change();
+                    }
+                }
+            }
+        });
+
+        //查询二级商品运营分类
+        $("#firstOperatingCategory").change(function(){
+            var oprtCatNo = $("#firstOperatingCategory option:selected").val();
+            $.ajax({
+                url:"http://api.dajihui.cn/O2O_MallMgt/commodity_com/getSubOperCateList.ihtml",
+                data:{oprtCatNo:oprtCatNo},
+                dataType:"JSON",
+                success:function(data){
+                    if(null!=data && data.length!=0){
+                        var secondOperCatNo = "";
+                        var innerHtml="<option value=''>二级分类</option>"
+                        for(var i=0;i<data.length;i++){
+                            innerHtml+="<option value="+data[i].oprtCatNo+">"+data[i].oprtCatName+"</option>"
+                        }
+                        $("#secondOperatingCategory").html(innerHtml);
+                        //默认值
+                        if(secondOperCatNo != ''){
+                            $("#secondOperatingCategory option[value='"+secondOperCatNo+"']").attr("selected","selected");
+                            $("#secondOperatingCategory").change();
+                        }
+                    }
+                }
+            });
+        });
+
+        //查询三级商品运营分类
+        $("#secondOperatingCategory").change(function(){
+            var oprtCatNo = $("#secondOperatingCategory option:selected").val();
+            $.ajax({
+                url:"http://api.dajihui.cn/O2O_MallMgt/commodity_com/getSubOperCateList.ihtml",
+                data:{oprtCatNo:oprtCatNo},
+                dataType:"JSON",
+                success:function(data){
+                    if(null!=data && data.length!=0){
+                        var thirdOperCatNo = "";
+                        var innerHtml="<option value=''>三级分类</option>"
+                        for(var i=0;i<data.length;i++){
+                            innerHtml+="<option value="+data[i].oprtCatNo+">"+data[i].oprtCatName+"</option>"
+                        }
+                        $("#thirdOperatingCategory").html(innerHtml);
+                        //默认值
+                        if(thirdOperCatNo != ''){
+                            $("#thirdOperatingCategory option[value='"+thirdOperCatNo+"']").attr("selected","selected");
+                        }
+                    }
+                }
+            });
+        });
+    });
+
+    //条件搜索
+    function search(){
+        var catNo="";
+        var firstCommonCategory=$("#firstCommonCategory").val();
+        var secondCommonCategory=$("#secondCommonCategory").val();
+        var thirdCommonCategory=$("#thirdCommonCategory").val();
+
+        if(firstCommonCategory !=0 && secondCommonCategory !=0 && thirdCommonCategory !=0){
+            catNo = thirdCommonCategory;
+        }else if(firstCommonCategory !=0 && secondCommonCategory !=0){
+            catNo = secondCommonCategory;
+        }else if(firstCommonCategory !=0){
+            catNo = firstCommonCategory;
+        }
+
+        $("#catNo").attr("value",catNo);
+
+        var oprtCatNo ="";
+        var firstOperatingCategory=$("#firstOperatingCategory").val();
+        var secondOperatingCategory=$("#secondOperatingCategory").val();
+        var thirdOperatingCategory=$("#thirdOperatingCategory").val();
+
+        if(firstOperatingCategory !=0 && secondOperatingCategory !=0 && thirdOperatingCategory !=0){
+            oprtCatNo = thirdOperatingCategory;
+        }else if(firstOperatingCategory !=0 && secondOperatingCategory !=0){
+            oprtCatNo = secondOperatingCategory;
+        }else if(firstOperatingCategory !=0){
+            oprtCatNo = firstOperatingCategory;
+        }
+
+        var _exportStartIndex = $('#exportStart').val(); // 起始位置
+        var _exportNum = $('#exportNum'); // 导出数量
+        if (!AYR.Util.isDigits(_exportStartIndex)) {
+            alert('请输入正确的数字');
+            return false;
+        }
+        if (!AYR.Util.isDigits(_exportNum)) {
+            alert('请输入正确的数字');
+            return false;
+        }
+        $('#submitForm').submit();
+    }
+
+    // 上传价格记录文件Excel
+    function submitExcel(){
+        var excelUploadUrl = 'ajax/excel.json'
+                , excelFile = $('#excelFile').val();
+        if(excelFile==''){
+            alert('请选择需上传的文件!');
+            return false;
+        }
+        if(excelFile.indexOf('.xls') == -1) {
+            alert('文件格式不正确,请选择正确的Excel文件!');
+            return false;
+        }
+        $.ajax({
+            method: "POST",
+            url : excelUploadUrl,
+            data :{excelFile: excelFile},
+            dataType: "json",
+            beforeSend: function(){
+                $('#submitExcelBtn').html('正在上传...');
+            },
+            success: function(data){
+                $('#excelLen').html(data.result.len);
+                alert('上传成功');
+            },
+            error: function(){
+                alert('上传失败');
+            },
+            complete: function(){
+                $('#submitExcelBtn').html('上传');
+            }
+        });
+    }
+
+    //  表单重置
+    function reset(){
+        $('#submitForm')[0].reset();
+    }
+
+    // 表格最后一栏操作
+    function formate(value, row, index){
+        return '<a href="#" onclick="deleterow(this)">删除</a>';
+    }
+
+    // 触发导入按钮
+    function exportTrigger(){
+        var _searchResultGrid = $('#search_result_grid'); //  搜索结果
+        var _downloadGrid = $('#download_grid'); // 下载列表
+        var _selectionArr = _searchResultGrid.datagrid('getSelections');
+        _downloadGrid.datagrid('loadData',_selectionArr);
+    }
+
+    // 触发下载列表删除按钮
+    function deleterow(target){
+        alert(target);
+        $.messager.confirm('确认框','确认删除该条数据吗?',function(r){
+            if (r){
+                $('#download_grid').datagrid('deleteRow', getRowIndex(target));
+            }
+        });
+    }
+
+    // 获取行索引
+    function getRowIndex(target){
+        var tr = $(target).closest('tr.datagrid-row');
+        return parseInt(tr.attr('datagrid-row-index'));
+    }
+
+
+    // 正则
+    var AYR = {};
+    AYR.Util = {
+        isDigits: function(v){
+            return /^\d+$/.test( v )
+        }
+    };
+</script>
+<body>
+<div class="list_container">
+    <div class="list_container_top">
+        <span class="lct_left"></span>
+            <span class="lct_center">
+                  <em>商品列表-商城</em>
+			</span>
+        <span class="lct_right"></span>
+    </div>
+    <div class="list_container_center">
+        <form class="clearfix" id="submitForm" action="query_commodity.ihtml" method="post">
+            <input type="hidden" name="catNo" id="catNo" value=""/>
+            <input type="hidden" name="oprtCatNo" id="oprtCatNo" value=""/>
+            <input type="hidden" name="IsNotHasPicCommodity" id="IsNotHasPicCommodity" value="2"/>
+            <div class="lcc_operate lmq">
+                <div class="setDivFour">
+                    <p class="lp">
+                        <span class="">上传价格记录文件:</span>
+                        <input type="file" id="excelFile" name="excelFile" accept=".xls,.xlsx">
+                    </p>
+                </div>
+                <div class="setDivFour">
+                    <p class="lp">
+                        <a href="javascript:;" class="lcc_but l12" onclick="submitExcel()">
+                            <span id="submitExcelBtn">上传</span>
+                        </a>
+                        <span>共 <span id="excelLen">46</span> 条</span>
+                        <input type="text" id="exportStart" name="exportStart" value="" placeholder="起始位置">
+                        <input type="text" id="exportNum" name="exportNum" value="" placeholder="导出数量">
+                    </p>
+                </div>
+                <div class="setDivFour">
+                    <p class="lp">
+                        <span class="">商品名称:</span>
+                        <input type="text" id="commoName" name="commoName" value="" maxlength="20">
+                    </p>
+                    <p class="lp">
+                        <span class="">国际条码:</span>
+                        <input type="text" id="commoBarCodes" name="commoBarCodes" value="" maxlength="11">
+                    </p>
+                    <p class="lp">
+                        <span class="">商品品牌:</span>
+                        <select class="easyui-combobox" id="commoBrand" name="commoBrand">
+                            <option value="0">乐事</option>
+                            <option value="1">可口可乐</option>
+                        </select>
+                    </p>
+                </div>
+                <div class="setDivFour">
+                    <p class="lp">
+                        <span class="">商品分类:</span>
+                        <select id="firstCommonCategory" name="firstCatNo">
+                            <option value="">一级分类</option>
+                        </select>
+                        <select  id="secondCommonCategory" name="secondCatNo">
+                            <option value="">二级分类</option>
+                        </select>
+                        <select  id="thirdCommonCategory" name="thirdCatNo">
+                            <option value="">三级分类</option>
+                        </select>
+                    </p>
+                </div>
+                <div class="setDivFour">
+                    <p class="lp">
+                        <a href="javascript:;" class="lcc_but l12" onclick="search();">
+                            <span>搜索</span>
+                        </a>
+                    </p>
+
+                    <p class="lp">
+                        <a href="javascript:;" class="lcc_but l12" onclick="reset();">
+                            <span>清空</span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </form>
+        <!-- 表格 -->
+        <div class="export_container clearfix">
+            <div class="export_src fl">
+                <p class="text_center">搜索结果</p>
+                <div class="" id="{rows1}">
+                    <div class="dataList">
+                        <table class="easyui-datagrid" id="search_result_grid" title="" style="height:400px;"
+                               data-options="idField: 'orgName',rownumbers:true,singleSelect:false,pagination:true,url:'ajax/priceExcel.json',
+						iconCls:'icon-ok',fitColumns:false,pageList:[10,50,100,300,500],beforePageText: '第',afterPageText: '页    共 {pages} 页', displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录 '">
+                            <thead>
+                            <tr>
+                                <th data-options="field:'ck',checkbox:true ,width: 150"></th>
+                                <th data-options="field:'orgName',width:150">商品名称</th>
+                                <th data-options="field:'outletName',width:150">国际条码</th>
+                                <th data-options="field:'orderNo',width:150">商品品牌</th>
+                                <th data-options="field:'paymentSequence',width: 150">价格</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="export_divide fl text_center">
+                <a href="javascript:;" class="lcc_but l12 float_none" onclick="exportTrigger();">
+                    <span>导入</span>
+                </a>
+            </div>
+            <div class="export_result fl">
+                <p class="text_center">下载列表</p>
+                <div class="" id="{rows}">
+                    <div class="dataList">
+                        <table class="easyui-datagrid" id="download_grid" title="" style="height:400px;"
+                               data-options="rownumbers:false,singleSelect:false,pagination:true,url:'ajax/priceExcel.json',
+						iconCls:'icon-ok',fitColumns:false,pageList:[10,50,100,300,500],beforePageText: '第',afterPageText: '页    共 {pages} 页', displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录 '">
+                            <thead>
+                            <tr>
+                                <th data-options="field:'orgName',width:150">商品名称</th>
+                                <th data-options="field:'outletName',width:150">国际条码</th>
+                                <th data-options="field:'orderNo',width:150">商品品牌</th>
+                                <th data-options="field:'id',align:'center',title: '操作',formatter:formate,width: 120">操作</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="text_center">
+                    <a href="javascript:;" class="lcc_but l12 float_none mt20" onclick="">
+                        <span>模版下载</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>
